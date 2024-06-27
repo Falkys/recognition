@@ -4,14 +4,11 @@ from art import tprint
 from Utils.commands import load_commands, get_command, get_patterns
 
 commands = load_commands()
-print(commands)
 print(line)
 tprint('''
                                 Palladium
                                     by Falkys
 ''')
-print(line)
-tprint("            Recognize", "cybermedium")
 try:
     while True:
         print(line)
@@ -26,6 +23,7 @@ try:
             for info in command_info["info"]:
                 try:
                     if info["isArrays"]:
+                        print(True)
                         result1 = get_patterns(command_info)
                         result = info["command"](result1)
                     else:

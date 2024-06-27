@@ -34,6 +34,15 @@ def extract_values(template, answer):
 
     return values
 
+def isArray(name):
+    pattern = r'\{[^:]+: \[(.*?)\]\}'
+    match = re.search(pattern, name)
+    
+    if not match:
+        return False
+    else:
+        return True
+
 def combine(name):
     patterns = re.findall(r'\{[^}]+\}', name)
 
@@ -61,17 +70,14 @@ def load_commands():
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
 
-            command_info = { "names": [], "arrays": [], "originals": [] }
+            command_info = { "names": [] }
 
             for name in module.names:
-                arrays = combine(name)
-                print(arrays)
+                arrays = isArray(name)
                 if arrays:
                     command_info["isArrays"] = True
-                    command_info["originals"].append(name)
                     
                     result = combine(name)
-                    print(result)
                     for item in result['texts']:
                         command_info["names"].append({item: name})
                 else:

@@ -4,6 +4,15 @@ import re
 import difflib
 import inspect
 
+def check_array(arr):
+    if isinstance(arr, list):
+        if all(isinstance(item, str) for item in arr):
+            return True
+        else:
+            return False
+    else:
+        return False
+
 def get_patterns(command_info):
     template1 = find_value(command_info["closest"], command_info["info"][0]["names"])
     answer1 = command_info["closest"]
@@ -17,7 +26,6 @@ def find_value(key, array):
     return None
 
 def extract_values(template, answer):
-    # Ищем все переменные в шаблоне вида { key: [val1, val2] }
     pattern = r'\{(\s*(\w+)\s*:\s*\[\s*([^\]]*)\s*\]\s*)\}'
     matches = re.findall(pattern, template)
 
@@ -71,6 +79,14 @@ def load_commands():
             spec.loader.exec_module(module)
 
             command_info = { "names": [] }
+
+            errors = []
+            name_u = getattr(module, "names", [])
+            if not check_array(name_u):
+                errors.append(f"{name_u} is not an array with strings")
+
+            
+            
 
             for name in module.names:
                 arrays = isArray(name)
